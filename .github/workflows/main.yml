@@ -15,11 +15,13 @@ jobs:
     steps:
       - name: Clonar el repositorio
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # SonarQube necesita el historial completo
 
       - name: Configurar Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.13'
+          python-version: '3.12'  # Versión estable
 
       - name: Instalar dependencias
         run: |
@@ -33,3 +35,8 @@ jobs:
       - name: Ejecutar pruebas unitarias
         run: |
           python -m unittest discover tests
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
